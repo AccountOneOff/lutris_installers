@@ -1,0 +1,37 @@
+name: Twitch App
+game_slug: twitch-app
+version: Latest
+slug: twitch-app
+runner: wine
+notes: "When closing Twitch App it might take several tries before it exits entirely."
+
+script:
+  files:
+    - app: https://updates.twitchapp.net/windows/installer/TwitchSetup.exe
+  game:
+    arch: win64
+    exe: drive_c/users/$USER/Application Data/Twitch/Bin/Twitch.exe
+    prefix: $GAMEDIR
+  installer:
+  - task:
+      arch: win64
+      name: create_prefix
+      prefix: $GAMEDIR
+  - task:
+      app: dotnet472
+      arch: win64
+      name: winetricks
+      prefix: $GAMEDIR
+  - task:
+      executable: $app
+      exclude_processes: mscorsvw.exe Twitch.exe TwitchUI.exe
+      name: wineexec
+      prefix: $GAMEDIR
+  - task:
+      name: winekill
+      prefix: $GAMEDIR
+  system:
+    env:
+      DXVK_HUD: '0'
+  wine:
+    version: staging-3.16-x86_64

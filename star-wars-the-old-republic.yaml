@@ -1,0 +1,42 @@
+files:
+- setup: https://swtor-a.akamaihd.net/installer/SWTOR_setup.exe
+- launcher: https://raw.githubusercontent.com/AccountOneOff/lutris_files/master/launcher.settings
+game:
+  arch: win64
+  exe: $GAMEDIR/drive_c/Program Files (x86)/Electronic Arts/BioWare/Star Wars - The
+    Old Republic/launcher.exe
+  prefix: $GAMEDIR
+installer:
+- task:
+    arch: win64
+    description: Creating Wine prefix...
+    name: create_prefix
+    prefix: $GAMEDIR
+- task:
+    app: msxml3 msls31 winhttp vcrun2008 d3dx9
+    arch: win64
+    description: Installing winetricks workarounds...
+    name: winetricks
+    prefix: $GAMEDIR
+- task:
+    args: /S
+    description: Installing game...
+    executable: $setup
+    name: wineexec
+    prefix: $GAMEDIR
+- task:
+    name: winekill
+    prefix: $GAMEDIR
+- execute:
+    command: mkdir -p "$GAMEDIR/drive_c/Program Files (x86)/Electronic Arts/BioWare/Star
+      Wars - The Old Republic"
+- extract:
+    dst: $GAMEDIR/drive_c/Program Files (x86)/Electronic Arts/BioWare/Star Wars -
+      The Old Republic
+    file: $GAMEDIR/drive_c/users/$USER/Temp/InstallSWTOR/swtor.rar
+- merge:
+    dst: $GAMEDIR/drive_c/Program Files (x86)/Electronic Arts/BioWare/Star Wars -
+      The Old Republic
+    src: $launcher
+wine:
+  version: esync-3.15-x86_64

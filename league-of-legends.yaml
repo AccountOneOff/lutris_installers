@@ -1,0 +1,83 @@
+name: League of Legends
+slug: league-of-legends
+game_slug: league-of-legends
+runner: wine
+version: Standalone
+
+script:
+    files:
+    - lol_installer: https://riotgamespatcher-a.akamaihd.net/releases/live/installer/deploy/League%20of%20Legends%20installer%20NA.exe
+    game:
+      arch: win64
+      exe: $GAMEDIR/drive_c/Riot Games/League of Legends/LeagueClient.exe
+      prefix: $GAMEDIR
+    installer:
+    - input_menu:
+        description: "Choose the game's language:"
+        id: LOCALE
+        options:
+            - en_GB: English
+            - de_DE: German
+            - es_ES: Spanish
+            - fr_FR: French
+            - it_IT: Italian
+        preselect: en_GB
+    - input_menu:
+        description: "Choose the game's server region:"
+        id: REGION
+        options:
+            - BR: Brazil
+            - EUNE: "Europe Nordic & East"
+            - EUW: "Europe West"
+            - LAN: "Latin America North"
+            - LAS: "Latin America South"
+            - NA: "North America"
+            - OCE: Oceania
+            - RU: Russia
+            - TR: Turkey
+            - JP: Japan
+            - SEA: "South East Asia"
+            - KR: "Republic of Korea"
+            - CN: "People's Republic of China"
+        preselect: NA
+    - task:
+        description: Creating Wine prefix
+        arch: win64
+        name: create_prefix
+        prefix: $GAMEDIR
+    - task:
+        app: winxp
+        description: Setting Windows version to XP
+        name: winetricks
+        prefix: $GAMEDIR
+    - task:
+        executable: lol_installer
+        args: --mode unattended
+        name: wineexec
+        prefix: $GAMEDIR
+    - task:
+        arch: win64
+        description: Fixing mouse cursor capture
+        key: GrabFullScreen
+        name: set_regedit
+        path: HKEY_CURRENT_USER\Software\Wine\X11 Driver
+        prefix: $GAMEDIR
+        value: Y
+    - write_file:
+        content:
+          install:
+            globals:
+              locale: $INPUT_LOCALE
+              region: $INPUT_REGION
+        file: $GAMEDIR/drive_c/Riot Games/League of Legends/Config/LeagueClientSettings.yaml
+    system:
+      disable_runtime: true
+      env:
+        MESA_GLTHREAD: 'true'
+        __GL_THREADED_OPTIMIZATIONS: '1'
+    wine:
+      version: esync-staging-pba-3.16-x86_64
+      UseGLSL: disabled
+      MouseWarpOverride: enable
+      overrides:
+        msvcp140: n,b
