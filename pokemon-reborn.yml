@@ -1,0 +1,21 @@
+files:
+- reborn: N/A:Select Reborn 18.1 zip archive
+game:
+  exe: drive_c/Program Files/Pokemon Reborn/Game.exe
+  prefix: $GAMEDIR
+installer:
+- task:
+    name: create_prefix
+    prefix: $GAMEDIR
+- execute:
+    command: mkdir "$GAMEDIR/drive_c/Program Files/Pokemon Reborn"
+- extract:
+    dst: $GAMEDIR/drive_c/Program Files/Pokemon Reborn
+    src: reborn
+- task:
+    app: quartz
+    name: winetricks
+    prefix: $GAMEDIR
+wine:
+  overrides:
+    winegstreamer: disabled

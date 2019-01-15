@@ -1,0 +1,36 @@
+files:
+- alpha: https://github.com/AlphaConsole/AlphaConsoleElectron/releases/download/v9.8.6/AlphaConsole_Setup_9.8.6.0.exe
+game:
+  appid: 252950
+  arch: win32
+  nolaunch: true
+installer:
+- merge:
+    dst: $GAMEDIR
+    src: alpha
+- task:
+    arch: win32
+    key: ShowDotFiles
+    name: set_regedit
+    path: HKEY_CURRENT_USER\Software\Wine
+    value: Y
+- task:
+    arch: win32
+    description: 'Please select RocketLeague.exe through the setup prompt to install
+      AlphaConsole.
+
+      Click Ignore when it complains about the filepath being too long.'
+    exclude_processes: AlphaConsole.exe
+    executable: $GAMEDIR/AlphaConsole_Setup_9.8.6.0.exe
+    name: wineexec
+- task:
+    arch: win32
+    name: winekill
+system:
+  env:
+    __GL_THREADED_OPTIMIZATIONS: '1'
+    mesa_glthread: 'true'
+winesteam:
+  Desktop: true
+  WineDesktop: 1920x1080
+  version: tkg-3.21-x86_64

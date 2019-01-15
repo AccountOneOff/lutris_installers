@@ -1,0 +1,30 @@
+files:
+- dotfile: https://raw.githubusercontent.com/AccountOneOff/lutris_files/master/dotfile.reg
+- gmdx9:
+    filename: GMDX_v9.0.3.exe
+    referer: https://www.moddb.com/mods/gmdx/downloads
+    url: https://www.moddb.com/downloads/mirror/124938/101/11fc1a1373cc271f921c2e427ec31bcc/
+- sppfx: https://gitlab.com/quietkerb/steamplayprefix/raw/master/sppfx.sh
+game:
+  appid: 6910
+installer:
+- chmodx: sppfx
+- execute:
+    command: $CACHE/sppfx.sh 6910 winetricks -q vcrun2015
+    description: Installing vcrun2015
+- execute:
+    command: $CACHE/sppfx.sh 6910 regedit $dotfile
+- execute:
+    command: $CACHE/sppfx.sh 6910 $gmdx9
+    description: 'If your games directory is located in a dot folder (e.g. ~/.steam)
+      the setup won''t be able to see it.
+
+      To workaround this simply type Z:\home\username\.steam\steam\steamapps\common\Deus
+      Ex when prompted.
+
+      Replace <tt>username</tt> with your actual username.
+
+      '
+system:
+  pulse_latency: true
+

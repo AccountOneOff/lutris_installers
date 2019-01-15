@@ -3,7 +3,7 @@ files:
 - launcher: https://raw.githubusercontent.com/AccountOneOff/lutris_files/master/launcher.settings
 game:
   arch: win64
-  exe: $GAMEDIR/drive_c/Program Files (x86)/Electronic Arts/BioWare/Star Wars - The
+  exe: drive_c/Program Files (x86)/Electronic Arts/BioWare/Star Wars - The
     Old Republic/launcher.exe
   prefix: $GAMEDIR
 installer:
@@ -21,7 +21,7 @@ installer:
 - task:
     args: /S
     description: Installing game...
-    executable: $setup
+    executable: setup
     name: wineexec
     prefix: $GAMEDIR
 - task:
@@ -37,6 +37,6 @@ installer:
 - merge:
     dst: $GAMEDIR/drive_c/Program Files (x86)/Electronic Arts/BioWare/Star Wars -
       The Old Republic
-    src: $launcher
+    src: launcher
 wine:
   version: esync-3.15-x86_64

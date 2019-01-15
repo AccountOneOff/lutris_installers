@@ -1,0 +1,75 @@
+name: Subnautica
+slug: subnautica
+game_slug: subnautica
+runner: wine
+version: Epic Store
+
+script:
+  files:
+  - epic: https://epicgames-download1.akamaized.net/Builds/UnrealEngineLauncher/Installers/Win32/EpicInstaller-7.16.0.msi
+  - audio: https://lutris.net/files/tools/directx-2010.tar.gz
+  game:
+    arch: win64
+    args: -SkipBuildPatchPrereq
+    exe: drive_c/Program Files (x86)/Epic Games/Launcher/Portal/Binaries/Win32/EpicGamesLauncher.exe
+    prefix: $GAMEDIR
+  installer:
+  - extract:
+      dst: $CACHE/dxsetup
+      file: $audio
+  - task:
+      arch: win64
+      name: create_prefix
+      prefix: $GAMEDIR
+  - task:
+      arch: win64
+      args: /silent
+      executable: $CACHE/dxsetup/DXSETUP.exe
+      name: wineexec
+      prefix: $GAMEDIR
+  - task:
+      arch: win64
+      name: winekill
+      prefix: $GAMEDIR
+  - task:
+      app: arial
+      arch: win64
+      description: Installing arial
+      name: winetricks
+      prefix: $GAMEDIR
+  - task:
+      app: xact
+      arch: win64
+      name: winetricks
+      prefix: $GAMEDIR
+  - task:
+      arch: win64
+      key: HideWineExports
+      name: set_regedit
+      path: HKEY_CURRENT_USER\Software\Wine
+      prefix: $GAMEDIR
+      value: Y
+  - task:
+      arch: win64
+      args: /i "$CACHE/EpicInstaller-7.16.0.msi" /q
+      description: Installing Epic Games Launcher
+      exclude_processes: EpicGamesLauncher.exe
+      executable: msiexec
+      name: wineexec
+      prefix: $GAMEDIR
+  - task:
+      arch: win64
+      name: winekill
+      prefix: $GAMEDIR
+  system:
+    disable_runtime: false
+    env:
+      DXVK_HUD: '0'
+    pulse_latency: true
+  wine:
+    dxvk: true
+    dxvk_version: '0.95'
+    overrides:
+      shcore: disabled
+      xaudio2_7: native,builtin
+    version: tkg-mtga-3.21-x86_64

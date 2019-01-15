@@ -1,0 +1,38 @@
+files:
+- game: 'N/A: Plese select the GOG.com Linux installer (stardew_valley_1_3_32_25307.sh)'
+- smapi: https://github.com/Pathoschild/SMAPI/releases/download/2.9.3/SMAPI-2.9.3-installer.zip
+- unzip: http://lutris.net/files/tools/unzip.tar.gz
+game:
+  exe: StardewValley/start.sh
+installer:
+- extract:
+    dst: $CACHE
+    file: $unzip
+- execute:
+    args: $game -d "$GAMEDIR" "data/noarch/*"
+    description: Extracting game data, it may take a while...
+    file: $CACHE/unzip
+- rename:
+    dst: $GAMEDIR/StardewValley
+    src: $GAMEDIR/data/noarch
+- move:
+    dst: $CACHE
+    src: $GAMEDIR/data
+- extract:
+    dst: $GAMEDIR/SMAPI
+    src: smapi
+- rename:
+    dst: $GAMEDIR/SMAPI/internal/unix-install.zip
+    src: $GAMEDIR/SMAPI/internal/unix-install.dat
+- extract:
+    dst: $GAMEDIR/StardewValley/game/
+    src: $GAMEDIR/SMAPI/internal/unix-install.zip
+- rename:
+    dst: $GAMEDIR/StardewValley/game/StardewValley-original
+    src: $GAMEDIR/StardewValley/game/StardewValley
+- rename:
+    dst: $GAMEDIR/StardewValley/game/StardewValley
+    src: $GAMEDIR/StardewValley/game/StardewModdingAPI
+- chmodx: $GAMEDIR/StardewValley/game/StardewValley
+require-binaries: mono
+

@@ -1,0 +1,46 @@
+files:
+- cemu: http://cemu.info/releases/cemu_1.15.1.zip
+- hook: https://files.sshnuke.net/cemuhook_1114_0563.zip
+- packs: https://github.com/slashiee/cemu_graphic_packs/releases/download/appveyor764/graphicPacks_2-764.zip
+- controller: https://raw.githubusercontent.com/AccountOneOff/lutris_files/master/Xbox_Controller.txt
+game:
+  arch: win64
+  exe: drive_c/Program Files (x86)/cemu_1.15.1/Cemu.exe
+  prefix: $GAMEDIR
+installer:
+- task:
+    arch: win64
+    name: create_prefix
+    prefix: $GAMEDIR
+- task:
+    app: vcrun2017
+    name: winetricks
+    prefix: $GAMEDIR
+- task:
+    app: win7
+    name: winetricks
+    prefix: $GAMEDIR
+- extract:
+    dst: $GAMEDIR/drive_c/Program Files (x86)/cemu_1.15.1
+    file: cemu
+- extract:
+    dst: $CACHE/hook
+    file: hook
+- merge:
+    dst: $GAMEDIR/drive_c/Program Files (x86)/cemu_1.15.1
+    src: $CACHE/hook
+- extract:
+    dst: $GAMEDIR/drive_c/Program Files (x86)/cemu_1.15.1/graphicPacks
+    file: packs
+- write_file:
+    content: bleh
+    file: $GAMEDIR/drive_c/Program Files (x86)/cemu_1.15.1/controllerProfiles/Xbox_Controller.txt
+- merge:
+    dst: $GAMEDIR/drive_c/Program Files (x86)/cemu_1.15.1/controllerProfiles
+    src: controller
+system:
+  env:
+    __GL_THREADED_OPTIMIZATIONS: '1'
+    mesa_glthread: true
+wine:
+  version: tkg-3.21-x86_64

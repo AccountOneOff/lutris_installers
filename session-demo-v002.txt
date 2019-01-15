@@ -1,0 +1,41 @@
+files:
+- session:
+    filename: Kickstarter_-_DemoV002.zip
+    referer: http://www.indiedb.com/members/crea-turestudios/downloads
+    url: https://www.indiedb.com/downloads/mirror/130492/112/06b98e3000ca36e300c42a6b08b76870/
+game:
+  arch: win64
+  exe: drive_c/Program Files (x86)/Session Demo/SessionGame/Binaries/Win64/SessionGame-Win64-Shipping.exe
+  prefix: $GAMEDIR
+installer:
+- task:
+    arch: win64
+    name: create_prefix
+    prefix: $GAMEDIR
+- task:
+    app: xact win7
+    name: winetricks
+    prefix: $GAMEDIR
+- extract:
+    dst: $GAMEDIR/drive_c/Program Files (x86)/Session Demo
+    file: session
+- task:
+    arch: win64
+    key: HideWineExports
+    name: set_regedit
+    path: HKEY_CURRENT_USER\Software\Wine
+    prefix: $GAMEDIR
+    value: Y
+system:
+  env:
+    DXVK_HUD: 0
+  pulse_latency: true
+wine:
+  dumbxinputemu: true
+  dxvk: true
+  dxvk_version: 0.95
+  esync: true
+  overrides:
+    xaudio2_7: native,builtin
+  version: tkg-3.21-x86_64
+  x360ce-path: $GAMEDIR/drive_c/Program Files (x86)/Session Demo/SessionGame/Binaries/Win64

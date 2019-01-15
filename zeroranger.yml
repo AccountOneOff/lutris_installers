@@ -1,0 +1,41 @@
+files:
+- demozip: N/A:Select zip archive downloaded from itch.io
+- dxsetup: https://lutris.net/files/tools/directx-2010.tar.gz
+game:
+  arch: win64
+  exe: drive_c/Program Files (x86)/ZeroRanger/ZeroRangerDEMO.exe
+  prefix: $GAMEDIR
+installer:
+- task:
+    arch: win64
+    name: create_prefix
+    prefix: $GAMEDIR
+- execute:
+    command: mkdir "$GAMEDIR/drive_c/Program Files (x86)/ZeroRanger"
+- extract:
+    dst: $CACHE
+    src: demozip
+- task:
+    arch: win64
+    args: /C /T:"C:\\Program Files (x86)\\ZeroRanger"
+    executable: $CACHE/ZeroRangerDEMO.exe
+    name: wineexec
+    prefix: $GAMEDIR
+- merge:
+    dst: $GAMEDIR/drive_c/Program Files (x86)/ZeroRanger
+    src: $CACHE/readme.txt
+- extract:
+    dst: $CACHE/dxsetup
+    file: dxsetup
+- task:
+    arch: win64
+    args: /silent
+    executable: $CACHE/dxsetup/DXSETUP.exe
+    name: wineexec
+    prefix: $GAMEDIR
+- task:
+    name: winekill
+    prefix: $GAMEDIR
+wine:
+  version: tkg-3.21-x86_64
+

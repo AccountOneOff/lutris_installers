@@ -1,0 +1,80 @@
+name: MTGA
+game_slug: mtga
+version: latest
+slug: mtga
+runner: wine
+
+script:
+  files:
+  - setup: https://mtgarena.downloads.wizards.com/Live/Windows32/MTGAInstaller.exe
+  game:
+    arch: win32
+    exe: drive_c/Program Files/Wizards of the Coast/MTGA/MtgaLauncher.exe
+    prefix: $GAMEDIR
+  installer:
+  - task:
+      arch: win32
+      description: Creating Wine prefix
+      name: create_prefix
+      prefix: $GAMEDIR
+  - task:
+      arch: win32
+      key: GrabFullscreen
+      name: set_regedit
+      path: HKEY_CURRENT_USER\Software\Wine\X11 Driver
+      prefix: $GAMEDIR
+      value: Y
+  - task:
+      arch: win32
+      key: UseTakeFocus
+      name: set_regedit
+      path: HKEY_CURRENT_USER\Software\Wine\X11 Driver
+      prefix: $GAMEDIR
+      value: N
+  - task:
+      app: dotnet472
+      arch: win32
+      description: Installing .NET 4.7.2 This will take a while...
+      name: winetricks
+      prefix: $GAMEDIR
+  - task:
+      app: xact
+      arch: win32
+      description: Installing xact
+      name: winetricks
+      prefix: $GAMEDIR
+  - task:
+      app: corefonts
+      arch: win32
+      description: Installing corefonts
+      name: winetricks
+      prefix: $GAMEDIR
+  - task:
+      app: win10
+      arch: win32
+      name: winetricks
+      prefix: $GAMEDIR
+  - task:
+      arch: win32
+      args: /quiet
+      description: Installing Magic the Gathering Arena. Game will open and close shortly after.
+      exclude_processes: mscorsvw.exe MTGA.exe UnityCrashHandler32.exe
+      executable: setup
+      name: wineexec
+      prefix: $GAMEDIR
+  - task:
+      arch: win32
+      name: winekill
+      prefix: $GAMEDIR
+  system:
+    env:
+      DXVK_HUD: '0'
+  wine:
+    Desktop: true
+    WineDesktop: 1920x1080
+    dxvk: false
+    dxvk_version: '0.95'
+    esync: true
+    overrides:
+      nvapi,nvapi64: disabled
+    version: tkg-mtga-3.21-x86_64

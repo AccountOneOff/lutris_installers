@@ -23,7 +23,8 @@ script:
       name: winetricks
       prefix: $GAMEDIR
   - task:
-      executable: $app
+      arch: win64
+      executable: app
       exclude_processes: mscorsvw.exe Twitch.exe TwitchUI.exe
       name: wineexec
       prefix: $GAMEDIR
@@ -34,4 +35,4 @@ script:
     env:
       DXVK_HUD: '0'
   wine:
-    version: staging-3.16-x86_64
+    version: tkg-3.21-x86_64

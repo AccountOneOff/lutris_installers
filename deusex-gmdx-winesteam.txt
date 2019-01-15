@@ -1,0 +1,29 @@
+files:
+- gmdx9:
+    filename: GMDX_v9.0.3.exe
+    referer: https://www.moddb.com/mods/gmdx/downloads
+    url: https://www.moddb.com/downloads/mirror/124938/101/11fc1a1373cc271f921c2e427ec31bcc/
+game:
+  appid: 6910
+  arch: win32
+  prefix: $GAMEDIR/prefix
+  steamless_binary: $GAMEDIR/System/GMDX.exe
+installer:
+- task:
+    arch: win32
+    name: create_prefix
+    prefix: $GAMEDIR/prefix
+- task:
+    app: vcrun2015
+    arch: win32
+    name: winetricks
+    prefix: $GAMEDIR/prefix
+- task:
+    arch: win32
+    executable: gmdx9
+    name: wineexec
+    prefix: $GAMEDIR/prefix
+winesteam:
+  Desktop: true
+  WineDesktop: 1920x1080
+  run_without_steam: true

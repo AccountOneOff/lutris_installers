@@ -1,0 +1,52 @@
+game:
+  appid: 110800
+  arch: win32
+  prefix: $GAMEDIR/prefix
+installer:
+- task:
+    arch: win32
+    name: create_prefix
+    prefix: $GAMEDIR/prefix
+- task:
+    app: d3dx9_42 d3dx9_43 vcrun2008 dotnet35sp1 win7
+    arch: win32
+    description: Hold tight while we install some winetricks
+    name: winetricks
+    prefix: $GAMEDIR/prefix
+- task:
+    arch: win32
+    name: winekill
+    prefix: $GAMEDIR/prefix
+- task:
+    arch: win32
+    args: /silent
+    executable: $GAMEDIR/3rd/DXSETUP.exe
+    name: wineexec
+    prefix: $GAMEDIR/prefix
+- task:
+    arch: win32
+    args: /Silent
+    executable: $GAMEDIR/3rd/Social Club Setup.exe
+    name: wineexec
+    prefix: $GAMEDIR/prefix
+- move:
+    dst: $GAMEDIR
+    src: $GAMEDIR/3rd/Social Club Setup.exe
+- move:
+    dst: $CACHE
+    src: $GAMEDIR/3rd
+- execute:
+    command: mkdir "$GAMEDIR/3rd"
+- move:
+    dst: $GAMEDIR/3rd/
+    src: $GAMEDIR/Social Club Setup.exe
+- write_config:
+    file: $GAMEDIR/prefix/drive_c/users/$USER/My Documents/Rockstar Games/L.A. Noire/settings.ini
+    key: Renderer
+    section: LANSettings
+    value: DirectX 11
+winesteam:
+  dxvk: true
+  dxvk_version: 0.95
+  version: tkg-3.21-x86_64
+
